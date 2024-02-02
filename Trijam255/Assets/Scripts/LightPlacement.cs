@@ -59,7 +59,8 @@ public class LightPlacement : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
         {
-            StartGame();
+            if (!isTutorialPanelActive)
+                StartGame();
         }
     }
 
