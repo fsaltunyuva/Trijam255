@@ -13,6 +13,7 @@ public class LightPlacement : MonoBehaviour
     [SerializeField] private TextMeshProUGUI placableLightsText;
     [SerializeField] private GameObject placableLightsTextGameObject;
     [SerializeField] private GameObject warningText;
+    [SerializeField] private GameObject tutorialPanel;
     
     [HideInInspector]
     public bool gameStart = false;
@@ -21,7 +22,7 @@ public class LightPlacement : MonoBehaviour
     
     private void Start()
     {
-        placableLightsText.text = _currentlyPlacedLights + " / " + maxLights;
+        placableLightsText.text = maxLights - _currentlyPlacedLights + " / " + maxLights;
     }
 
     void Update()
@@ -33,13 +34,14 @@ public class LightPlacement : MonoBehaviour
                 Vector3 pos = lightPlacementCamera.ScreenToWorldPoint(Input.mousePosition);
                 Vector3 offset = new Vector3(0, 0, 10);
                 Instantiate(light2D, pos + offset, Quaternion.identity);
+                AudioSource.PlayClipAtPoint(light2D.GetComponent<AudioSource>().clip, pos);
                 _currentlyPlacedLights++;
-                placableLightsText.text = _currentlyPlacedLights + " / " + maxLights;
+                placableLightsText.text = (maxLights - _currentlyPlacedLights) + " / " + maxLights;
             }
             else
             {
                 warningText.SetActive(true);
-                Invoke("DestroyWarningText", 2f);
+                Invoke("DestroyWarningText", 1f);
             }
         }
     }
@@ -64,6 +66,11 @@ public class LightPlacement : MonoBehaviour
     public void DestroyWarningText()
     {
         warningText.SetActive(false);
+    }
+
+    public void DisableTutorialPanel()
+    {
+        tutorialPanel.SetActive(false);
     }
     
 }
