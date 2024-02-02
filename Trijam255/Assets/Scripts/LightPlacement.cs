@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.Serialization;
 
 public class LightPlacement : MonoBehaviour
 {
@@ -7,9 +8,10 @@ public class LightPlacement : MonoBehaviour
     [SerializeField] private GameObject followCamera, mainCamera, lightPlacementCameraGameObject, light2D;
     [SerializeField] private Light2D globalLight;
     [SerializeField] private int maxLights = 3;
+    [SerializeField] private GameObject startButton;
     
-    [HideInInspector]
-    public bool allowMovement = false;
+    [FormerlySerializedAs("allowMovement")] [HideInInspector]
+    public bool gameStart = false;
     
     private int _currentlyPlacedLights = 0;
 
@@ -37,7 +39,8 @@ public class LightPlacement : MonoBehaviour
         lightPlacementCameraGameObject.SetActive(false);
         mainCamera.SetActive(true);
         followCamera.SetActive(true);
-        allowMovement = true;
+        startButton.SetActive(false);
+        gameStart = true;
     }
     
 }
