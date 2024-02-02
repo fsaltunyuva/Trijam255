@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
-using UnityEngine.Serialization;
 
 public class LightPlacement : MonoBehaviour
 {
@@ -10,7 +9,7 @@ public class LightPlacement : MonoBehaviour
     [SerializeField] private int maxLights = 3;
     [SerializeField] private GameObject startButton;
     
-    [FormerlySerializedAs("allowMovement")] [HideInInspector]
+    [HideInInspector]
     public bool gameStart = false;
     
     private int _currentlyPlacedLights = 0;
