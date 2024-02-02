@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.UI;
 
 public class LightPlacement : MonoBehaviour
 {
@@ -14,9 +15,14 @@ public class LightPlacement : MonoBehaviour
     [SerializeField] private GameObject placableLightsTextGameObject;
     [SerializeField] private GameObject warningText;
     [SerializeField] private GameObject tutorialPanel;
+    [SerializeField] private TextMeshProUGUI statusText;
+    [SerializeField] private Slider healthBar;
+    [SerializeField] private GameObject startText;
     
     [HideInInspector]
     public bool gameStart = false;
+    private bool isTutorialPanelActive = true;
+    private bool startButtonPressed = false;
     
     private int _currentlyPlacedLights = 0;
     
@@ -31,18 +37,29 @@ public class LightPlacement : MonoBehaviour
         {
             if (_currentlyPlacedLights < maxLights)
             {
-                Vector3 pos = lightPlacementCamera.ScreenToWorldPoint(Input.mousePosition);
-                Vector3 offset = new Vector3(0, 0, 10);
-                Instantiate(light2D, pos + offset, Quaternion.identity);
-                AudioSource.PlayClipAtPoint(light2D.GetComponent<AudioSource>().clip, pos);
-                _currentlyPlacedLights++;
-                placableLightsText.text = (maxLights - _currentlyPlacedLights) + " / " + maxLights;
+                if (!isTutorialPanelActive)
+                {
+                    Vector3 pos = lightPlacementCamera.ScreenToWorldPoint(Input.mousePosition);
+                    Vector3 offset = new Vector3(0, 0, 10);
+                    Instantiate(light2D, pos + offset, Quaternion.identity);
+                    AudioSource.PlayClipAtPoint(light2D.GetComponent<AudioSource>().clip, pos);
+                    _currentlyPlacedLights++;
+                    placableLightsText.text = (maxLights - _currentlyPlacedLights) + " / " + maxLights;
+                }
             }
             else
             {
-                warningText.SetActive(true);
-                Invoke("DestroyWarningText", 1f);
+                if (!startButtonPressed)
+                {
+                    warningText.SetActive(true);
+                    Invoke("DestroyWarningText", 1f);
+                }
             }
+        }
+        
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            StartGame();
         }
     }
 
@@ -56,6 +73,9 @@ public class LightPlacement : MonoBehaviour
         gameStart = true;
         restartButton.SetActive(true);
         placableLightsTextGameObject.SetActive(false);
+        statusText.transform.gameObject.SetActive(true);
+        healthBar.transform.gameObject.SetActive(true);
+        startText.SetActive(false);
     }
     
     public void RestartGame()
@@ -71,6 +91,7 @@ public class LightPlacement : MonoBehaviour
     public void DisableTutorialPanel()
     {
         tutorialPanel.SetActive(false);
+        isTutorialPanelActive = false;
     }
     
 }
