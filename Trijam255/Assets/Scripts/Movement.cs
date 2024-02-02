@@ -6,6 +6,7 @@ public class Movement : MonoBehaviour
 {
     public float speed;
     private Rigidbody2D rb;
+    [SerializeField] private LightPlacement lightPlacement;
     
     private Vector2 movement;
     
@@ -21,6 +22,7 @@ public class Movement : MonoBehaviour
     
     void FixedUpdate() 
     {
-        rb.velocity = movement * speed * Time.fixedDeltaTime;
+        if(lightPlacement.allowMovement)
+            rb.velocity = movement * speed * Time.fixedDeltaTime;
     }
 }
