@@ -8,6 +8,7 @@ public class LightPlacement : MonoBehaviour
     [SerializeField] private Light2D globalLight;
     [SerializeField] private int maxLights = 3;
     [SerializeField] private GameObject startButton;
+    [SerializeField] private GameObject restartButton;
     
     [HideInInspector]
     public bool gameStart = false;
@@ -40,6 +41,12 @@ public class LightPlacement : MonoBehaviour
         followCamera.SetActive(true);
         startButton.SetActive(false);
         gameStart = true;
+        restartButton.SetActive(true);
+    }
+    
+    public void RestartGame()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
     }
     
 }

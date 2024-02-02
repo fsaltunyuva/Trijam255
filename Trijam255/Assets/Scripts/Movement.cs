@@ -15,6 +15,8 @@ public class Movement : MonoBehaviour
     [SerializeField] private Slider healthBar;
     [SerializeField] private TextMeshProUGUI statusText;
     
+    [SerializeField] private GameObject winScreen, loseScreen;
+    
     void Start() 
     {
         rb = GetComponent<Rigidbody2D>();
@@ -35,6 +37,14 @@ public class Movement : MonoBehaviour
                     _health = 100;
             }
         }
+
+        if (_health <= 0)
+        {
+            loseScreen.SetActive(true);
+            lightPlacementInstance.gameStart = false;
+            statusText.text = "";
+        }
+            
     }
     
     void FixedUpdate() 
@@ -46,17 +56,23 @@ public class Movement : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("LightRadius"))
+        if (other.CompareTag("LightRadius") && lightPlacementInstance.gameStart)
         {
             pauseDepletion = true;
             statusText.text = "You are regenerating health!";
             statusText.color = Color.green;
         }
+        else if (other.CompareTag("Finish"))
+        {
+            lightPlacementInstance.gameStart = false;
+            winScreen.SetActive(true);
+            statusText.text = "";
+        }
     }
     
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (other.CompareTag("LightRadius"))
+        if (other.CompareTag("LightRadius") && lightPlacementInstance.gameStart)
         {
             pauseDepletion = false;
             statusText.text = "You are losing health!";
