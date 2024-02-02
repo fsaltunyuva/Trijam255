@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
@@ -9,15 +10,23 @@ public class LightPlacement : MonoBehaviour
     [SerializeField] private int maxLights = 3;
     [SerializeField] private GameObject startButton;
     [SerializeField] private GameObject restartButton;
+    [SerializeField] private TextMeshProUGUI placableLightsText;
+    [SerializeField] private GameObject placableLightsTextGameObject;
+    [SerializeField] private GameObject warningText;
     
     [HideInInspector]
     public bool gameStart = false;
     
     private int _currentlyPlacedLights = 0;
+    
+    private void Start()
+    {
+        placableLightsText.text = _currentlyPlacedLights + " / " + maxLights;
+    }
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !gameStart)
         {
             if (_currentlyPlacedLights < maxLights)
             {
@@ -25,10 +34,12 @@ public class LightPlacement : MonoBehaviour
                 Vector3 offset = new Vector3(0, 0, 10);
                 Instantiate(light2D, pos + offset, Quaternion.identity);
                 _currentlyPlacedLights++;
+                placableLightsText.text = _currentlyPlacedLights + " / " + maxLights;
             }
             else
             {
-                //TODO: Add a message to the player that they can't place any more lights
+                warningText.SetActive(true);
+                Invoke("DestroyWarningText", 2f);
             }
         }
     }
@@ -42,11 +53,17 @@ public class LightPlacement : MonoBehaviour
         startButton.SetActive(false);
         gameStart = true;
         restartButton.SetActive(true);
+        placableLightsTextGameObject.SetActive(false);
     }
     
     public void RestartGame()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+    }
+    
+    public void DestroyWarningText()
+    {
+        warningText.SetActive(false);
     }
     
 }
